@@ -3,7 +3,11 @@
 Web chia đội ngẫu nhiên với hiệu ứng particle, animation và âm thanh epic.
 Thay thế cho Wheel of Names khi cần chia 2 đội nhanh.
 
-## Chạy
+**👉 Dùng ngay: https://huytran19.github.io/team-splitter/**
+
+Không cần cài gì, mở link là chạy. Gửi link này cho cả team.
+
+## Chạy local
 
 ```bash
 python3 -m http.server 5173
@@ -96,3 +100,14 @@ Bảng thiết lập bên trái đẩy sàn đấu lệch sang phải tới ~208
 nên dùng giữa màn hình sẽ thấy thẻ lệch hẳn sang một bên.
 
 Hàm phụ trách: `arenaCenter()` trong [js/app.js](js/app.js).
+
+## Cập nhật site đã host
+
+Site chạy trên GitHub Pages, deploy thẳng từ nhánh `main` — không có build step.
+Sửa file xong chỉ cần:
+
+```bash
+git add -A && git commit -m "mô tả thay đổi" && git push
+```
+
+Khoảng 1 phút sau là link công khai tự cập nhật.
