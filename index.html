@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TEAM SPLITTER · Hextech Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+</head>
+<body>
+
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-glow bg-glow--blue" aria-hidden="true"></div>
+<div class="bg-glow bg-glow--red" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div id="shake-root">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <polygon class="bm-outer" points="24,2 44,13 44,35 24,46 4,35 4,13" />
+          <polygon class="bm-inner" points="24,11 36,18 36,30 24,37 12,30 12,18" />
+          <polygon class="bm-core" points="24,17 31,21 31,27 24,31 17,27 17,21" />
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>TEAM&nbsp;SPLITTER</h1>
+        <p>Chia đội ngẫu nhiên · <span>Hextech Edition</span></p>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <button id="btn-sound" class="icon-btn" type="button" title="Bật / tắt âm thanh" aria-pressed="true">
+        <span class="icon-on">🔊</span><span class="icon-off">🔇</span>
+      </button>
+      <button id="btn-fx" class="icon-btn" type="button" title="Bật / tắt hiệu ứng nặng" aria-pressed="true">
+        <span class="icon-on">✨</span><span class="icon-off">🚫</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ============ SETUP PANEL ============ -->
+    <aside class="panel setup" id="setup">
+      <button class="setup-rail" id="setup-rail" type="button" title="Mở bảng thiết lập (H)">
+        <span class="rail-icon">»</span>
+        <span class="rail-text">Thiết lập</span>
+      </button>
+
+      <div class="panel-head">
+        <span class="panel-head-deco"></span>
+        <h2>Thiết lập</h2>
+        <span class="panel-head-deco flip"></span>
+        <button class="collapse-btn" id="btn-collapse" type="button" title="Thu gọn bảng thiết lập (H)" aria-label="Thu gọn bảng thiết lập">«</button>
+      </div>
+
+      <div class="panel-body">
+
+        <!-- Mode tabs -->
+        <div class="tabs" role="tablist">
+          <button class="tab is-active" data-mode="count" role="tab" type="button">Số lượng</button>
+          <button class="tab" data-mode="names" role="tab" type="button">Danh sách tên</button>
+          <span class="tab-slider"></span>
+        </div>
+
+        <!-- COUNT MODE -->
+        <div class="mode-pane" data-pane="count">
+          <label class="field-label" for="input-count">Tổng số người</label>
+          <div class="stepper">
+            <button class="step-btn" type="button" data-step="-1" aria-label="Giảm">−</button>
+            <input id="input-count" class="stepper-input" type="number" min="2" max="64" value="10" inputmode="numeric" />
+            <button class="step-btn" type="button" data-step="1" aria-label="Tăng">+</button>
+          </div>
+          <div class="quick-picks">
+            <button class="pill" type="button" data-count="4">4</button>
+            <button class="pill" type="button" data-count="6">6</button>
+            <button class="pill" type="button" data-count="8">8</button>
+            <button class="pill" type="button" data-count="10">10</button>
+            <button class="pill" type="button" data-count="12">12</button>
+          </div>
+          <p class="hint">Người chơi sẽ được đặt tên <em>Người 1 … Người N</em>.</p>
+        </div>
+
+        <!-- NAMES MODE -->
+        <div class="mode-pane is-hidden" data-pane="names">
+          <label class="field-label" for="input-names">Danh sách tên <span class="counter" id="names-counter">0 người</span></label>
+          <textarea id="input-names" class="textarea" rows="7" spellcheck="false"
+            placeholder="Mỗi dòng một tên, hoặc ngăn cách bằng dấu phẩy&#10;&#10;Huy&#10;Nam&#10;Linh&#10;Trang"></textarea>
+          <div class="row-actions">
+            <button class="ghost-btn" type="button" id="btn-sample">Dùng mẫu</button>
+            <button class="ghost-btn" type="button" id="btn-clear-names">Xoá hết</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Team names -->
+        <div class="field-grid">
+          <div>
+            <label class="field-label" for="name-a">Tên đội 1</label>
+            <input id="name-a" class="text-input input--blue" type="text" value="ĐỘI XANH" maxlength="18" />
+          </div>
+          <div>
+            <label class="field-label" for="name-b">Tên đội 2</label>
+            <input id="name-b" class="text-input input--red" type="text" value="ĐỘI ĐỎ" maxlength="18" />
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label" for="odd-side">Khi số người lẻ, đội đông hơn là</label>
+          <select id="odd-side" class="select">
+            <option value="auto">Ngẫu nhiên (công bằng)</option>
+            <option value="a">Luôn là đội 1</option>
+            <option value="b">Luôn là đội 2</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="field-label">Tốc độ chia</label>
+          <div class="quick-picks seg" id="speed-seg">
+            <button class="pill" type="button" data-speed="fast">⚡ Nhanh</button>
+            <button class="pill is-active" type="button" data-speed="normal">⚔ Thường</button>
+            <button class="pill" type="button" data-speed="slow">🎬 Từng người</button>
+          </div>
+          <p class="hint" id="speed-hint">Đếm ngược 3·2·1 rồi lộ lần lượt cả hai đội.</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ===== CONSTRAINTS ===== -->
+        <div class="toggle-block">
+          <label class="switch">
+            <input type="checkbox" id="chk-pairs" />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label">
+              <strong>Ghép cặp cố định</strong>
+              <em>Hai người luôn ở <b>cùng</b> một đội</em>
+            </span>
+          </label>
+
+          <div class="rules is-collapsed" id="pairs-box">
+            <div class="rule-list" id="pairs-list"></div>
+            <button class="add-rule" type="button" data-add="pair">+ Thêm cặp đi chung</button>
+          </div>
+        </div>
+
+        <div class="toggle-block">
+          <label class="switch">
+            <input type="checkbox" id="chk-rivals" />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label">
+              <strong>Tách đối thủ</strong>
+              <em>Hai người luôn ở <b>khác</b> đội</em>
+            </span>
+          </label>
+
+          <div class="rules is-collapsed" id="rivals-box">
+            <div class="rule-list" id="rivals-list"></div>
+            <button class="add-rule" type="button" data-add="rival">+ Thêm cặp kỵ nhau</button>
+          </div>
+        </div>
+
+        <div id="messages" class="messages" role="status" aria-live="polite"></div>
+
+      </div><!-- /panel-body -->
+
+      <div class="panel-foot">
+        <button class="roll-btn" id="btn-roll" type="button">
+          <span class="roll-btn-bg"></span>
+          <span class="roll-btn-shine"></span>
+          <span class="roll-btn-label">
+            <svg class="roll-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 6.5v9L12 20l8-4.5v-9L12 2Zm0 2.3 6 3.4v6.6l-6 3.4-6-3.4V7.7l6-3.4Z"/><circle cx="12" cy="11" r="2.4"/></svg>
+            CHIA ĐỘI
+          </span>
+          <span class="roll-btn-kbd">Space</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ============ ARENA ============ -->
+    <section class="arena" id="arena">
+
+      <div class="team team--blue" id="team-a">
+        <div class="team-glow"></div>
+        <header class="team-head">
+          <div class="team-badge">
+            <svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,2 36,11 36,29 20,38 4,29 4,11"/></svg>
+            <span class="team-count" data-count>0</span>
+          </div>
+          <div class="team-title">
+            <h3 data-team-name>ĐỘI XANH</h3>
+            <p>Order</p>
+          </div>
+        </header>
+        <ul class="roster" data-roster></ul>
+        <div class="team-empty" data-empty>
+          <div class="empty-hex"></div>
+          <p>Chưa có kết quả</p>
+        </div>
+      </div>
+
+      <div class="vs-wrap">
+        <div class="vs-line vs-line--top"></div>
+        <div class="vs">
+          <div class="vs-ring vs-ring--1"></div>
+          <div class="vs-ring vs-ring--2"></div>
+          <div class="vs-ring vs-ring--3"></div>
+          <div class="vs-core"><span>VS</span></div>
+        </div>
+        <div class="vs-line vs-line--bottom"></div>
+      </div>
+
+      <div class="team team--red" id="team-b">
+        <div class="team-glow"></div>
+        <header class="team-head">
+          <div class="team-badge">
+            <svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,2 36,11 36,29 20,38 4,29 4,11"/></svg>
+            <span class="team-count" data-count>0</span>
+          </div>
+          <div class="team-title">
+            <h3 data-team-name>ĐỘI ĐỎ</h3>
+            <p>Chaos</p>
+          </div>
+        </header>
+        <ul class="roster" data-roster></ul>
+        <div class="team-empty" data-empty>
+          <div class="empty-hex"></div>
+          <p>Chưa có kết quả</p>
+        </div>
+      </div>
+
+      <div class="arena-actions" id="arena-actions">
+        <button class="ghost-btn" type="button" id="btn-reroll">🎲 Chia lại</button>
+        <button class="ghost-btn" type="button" id="btn-swap">⇄ Đổi bên</button>
+        <button class="ghost-btn" type="button" id="btn-copy">📋 Copy kết quả</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span><kbd>Space</kbd> chia đội</span>
+    <span><kbd>R</kbd> chia lại</span>
+    <span><kbd>H</kbd> thu gọn thiết lập</span>
+    <span><kbd>Esc</kbd> bỏ qua hiệu ứng</span>
+  </footer>
+
+</div><!-- /shake-root -->
+
+<canvas id="fx-canvas" aria-hidden="true"></canvas>
+
+<!-- ============ RIFT OVERLAY ============ -->
+<div class="rift" id="rift" aria-hidden="true">
+  <div class="rift-bg"></div>
+  <div class="rift-core">
+    <div class="rift-ring rr1"></div>
+    <div class="rift-ring rr2"></div>
+    <div class="rift-ring rr3"></div>
+    <div class="rift-hex"></div>
+    <div class="rift-count" id="rift-count"></div>
+  </div>
+  <p class="rift-label">ĐANG TRIỆU HỒI ĐỘI HÌNH</p>
+  <p class="rift-skip">Nhấn <kbd>Esc</kbd> để bỏ qua</p>
+</div>
+
+<div class="flash" id="flash" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
