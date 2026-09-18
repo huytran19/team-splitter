@@ -64,14 +64,25 @@
       <div class="panel-body">
 
         <!-- Mode tabs -->
-        <div class="tabs" role="tablist">
-          <button class="tab is-active" data-mode="count" role="tab" type="button">Số lượng</button>
-          <button class="tab" data-mode="names" role="tab" type="button">Danh sách tên</button>
+        <div class="tabs" role="tablist" data-active="names">
+          <button class="tab is-active" data-mode="names" role="tab" type="button">Danh sách tên</button>
+          <button class="tab" data-mode="count" role="tab" type="button">Số lượng</button>
           <span class="tab-slider"></span>
         </div>
 
+        <!-- NAMES MODE -->
+        <div class="mode-pane" data-pane="names">
+          <label class="field-label" for="input-names">Danh sách tên <span class="counter" id="names-counter">0 người</span></label>
+          <textarea id="input-names" class="textarea" rows="7" spellcheck="false"
+            placeholder="Mỗi dòng một tên, hoặc ngăn cách bằng dấu phẩy&#10;&#10;Huy&#10;Nam&#10;Linh&#10;Trang"></textarea>
+          <div class="row-actions">
+            <button class="ghost-btn" type="button" id="btn-sample">Dùng mẫu</button>
+            <button class="ghost-btn" type="button" id="btn-clear-names">Xoá hết</button>
+          </div>
+        </div>
+
         <!-- COUNT MODE -->
-        <div class="mode-pane" data-pane="count">
+        <div class="mode-pane is-hidden" data-pane="count">
           <label class="field-label" for="input-count">Tổng số người</label>
           <div class="stepper">
             <button class="step-btn" type="button" data-step="-1" aria-label="Giảm">−</button>
@@ -85,18 +96,7 @@
             <button class="pill" type="button" data-count="10">10</button>
             <button class="pill" type="button" data-count="12">12</button>
           </div>
-          <p class="hint">Người chơi sẽ được đặt tên <em>Người 1 … Người N</em>.</p>
-        </div>
-
-        <!-- NAMES MODE -->
-        <div class="mode-pane is-hidden" data-pane="names">
-          <label class="field-label" for="input-names">Danh sách tên <span class="counter" id="names-counter">0 người</span></label>
-          <textarea id="input-names" class="textarea" rows="7" spellcheck="false"
-            placeholder="Mỗi dòng một tên, hoặc ngăn cách bằng dấu phẩy&#10;&#10;Huy&#10;Nam&#10;Linh&#10;Trang"></textarea>
-          <div class="row-actions">
-            <button class="ghost-btn" type="button" id="btn-sample">Dùng mẫu</button>
-            <button class="ghost-btn" type="button" id="btn-clear-names">Xoá hết</button>
-          </div>
+          <p class="hint">Đặt tên tạm <em>Người 1 … Người N</em>. Bấm <em>Danh sách tên</em> để sửa thành tên thật — danh sách sẽ tự điền sẵn.</p>
         </div>
 
         <div class="divider"></div>

@@ -327,7 +327,7 @@ body {
   box-shadow: 0 0 16px rgba(200,170,110,.4);
   transition: transform .34s var(--ease-out);
 }
-.tabs[data-active="names"] .tab-slider { transform: translateX(100%); }
+.tabs[data-active="count"] .tab-slider { transform: translateX(100%); }
 
 .mode-pane { display: flex; flex-direction: column; gap: 11px; animation: fadeUp .35s var(--ease-out); }
 .mode-pane.is-hidden { display: none; }
@@ -552,6 +552,7 @@ body {
 .msg--error { background: rgba(255,70,85,.1);  border-color: var(--red);  color: var(--red-soft); }
 .msg--warn  { background: rgba(200,170,110,.1); border-color: var(--gold); color: var(--gold-bright); }
 .msg--ok    { background: rgba(10,200,185,.1);  border-color: var(--blue); color: var(--blue-soft); }
+.msg--info  { background: rgba(200,170,110,.07); border-color: var(--gold-dim); color: var(--ink-soft); }
 .msg-icon { flex-shrink: 0; font-size: 14px; line-height: 1.2; }
 
 /* ============ ROLL BUTTON ============ */

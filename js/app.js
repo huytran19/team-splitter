@@ -14,7 +14,7 @@ const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 /* ---------------- state ---------------- */
 
 const state = {
-  mode: 'count',          // 'count' | 'names'
+  mode: 'names',          // 'names' | 'count' — mặc định nhập tên thật
   rolling: false,
   skip: false,
   result: null,           // [teamA, teamB]
@@ -243,7 +243,8 @@ function showMessages(list) {
   for (const m of list) {
     const div = document.createElement('div');
     div.className = `msg msg--${m.type}`;
-    const icon = m.type === 'error' ? '⛔' : m.type === 'warn' ? '⚠️' : '✅';
+    const icon = m.type === 'error' ? '⛔' : m.type === 'warn' ? '⚠️'
+               : m.type === 'info' ? '💡' : '✅';
     div.innerHTML = `<span class="msg-icon">${icon}</span><span>${escapeHtml(m.text)}</span>`;
     el.messages.append(div);
   }
@@ -255,7 +256,11 @@ function validate(quiet = true) {
   const roster = state.roster;
 
   if (roster.length < 2) {
-    msgs.push({ type: 'error', text: 'Cần ít nhất 2 người để chia đội.' });
+    // Chưa gõ gì thì đây là trạng thái bình thường, không phải lỗi
+    const chuaNhap = state.mode === 'names' && !el.names.value.trim();
+    msgs.push(chuaNhap
+      ? { type: 'info', text: 'Nhập danh sách tên để bắt đầu — mỗi dòng một người. Cần chia nhanh theo số thì bấm tab "Số lượng".' }
+      : { type: 'error', text: 'Cần ít nhất 2 người để chia đội.' });
     showMessages(msgs);
     el.roll.disabled = true;
     return false;
@@ -713,7 +718,7 @@ function restore() {
   state.pairs  = Array.isArray(data.pairs)  ? data.pairs  : [];
   state.rivals = Array.isArray(data.rivals) ? data.rivals : [];
 
-  if (data.mode === 'names') setMode('names', true);
+  if (data.mode === 'count' || data.mode === 'names') state.mode = data.mode;
 
   if (SPEED_HINT[data.speed]) setSpeed(data.speed, true);
   if (data.collapsed) setCollapsed(true, true);
@@ -743,7 +748,22 @@ function syncBoxes() {
 }
 
 function setMode(mode, silent = false) {
+  const prev = state.mode;
   state.mode = mode;
+
+  // Chuyển qua lại giữa hai cách nhập mà không mất công gõ lại:
+  // - sang "Danh sách tên" khi chưa gõ gì  → điền sẵn Người 1..N để sửa đè
+  // - sang "Số lượng"                      → lấy luôn số người đang có
+  if (prev !== mode) {
+    if (mode === 'names' && !el.names.value.trim()) {
+      const n = clampCount(parseInt(el.count.value, 10) || 0);
+      el.names.value = rosterFromCount(n).map((p) => p.name).join('\n');
+    } else if (mode === 'count') {
+      const n = rosterFromText(el.names.value).length;
+      if (n >= 2) el.count.value = clampCount(n);
+    }
+  }
+
   el.tabs.dataset.active = mode;
   $$('.tab').forEach((t) => t.classList.toggle('is-active', t.dataset.mode === mode));
   $$('.mode-pane').forEach((p) => p.classList.toggle('is-hidden', p.dataset.pane !== mode));
@@ -897,5 +917,5 @@ function addRule(kind) {
 restore();
 bind();
 syncBoxes();
-syncRoster();
+setMode(state.mode, true);   // đồng bộ tab + khung nhập, tự gọi syncRoster()
 updateQuickPicks();

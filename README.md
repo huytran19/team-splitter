@@ -21,7 +21,7 @@ Mở http://localhost:5173
 
 | | |
 |---|---|
-| **2 chế độ nhập** | Số lượng (auto sinh "Người 1…N") hoặc dán danh sách tên |
+| **2 chế độ nhập** | **Danh sách tên** (mặc định — dán tên thật, mỗi dòng một người) hoặc **Số lượng** để chia nhanh theo số. Chuyển qua lại không mất dữ liệu: sang Số lượng thì tự lấy số người đang có; sang Danh sách tên khi còn trống thì tự điền Người 1…N để sửa đè |
 | **Chia đôi** | Số lẻ → một bên nhiều hơn đúng 1 người, chọn bên nào (hoặc ngẫu nhiên) |
 | **Ghép cặp cố định** | Tick để chọn 2 người **luôn cùng đội** |
 | **Tách đối thủ** | Tick để chọn 2 người **luôn khác đội** |
